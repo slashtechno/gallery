@@ -7,7 +7,7 @@ import {
   AUTH_LOOPS_KEY,
   AUTH_LOOPS_TRANSACTIONAL_ID,
 } from "$env/static/private"
-import GitHub from "@auth/sveltekit/providers/github"
+// import GitHub from "@auth/sveltekit/providers/github"
  
 
 const storage = createStorage()
