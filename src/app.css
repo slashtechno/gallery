@@ -1,0 +1,72 @@
+@import "tailwindcss";
+/* @plugin "@tailwindcss/forms"; */
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+/* CSS custom properties that change automatically based on theme */
+:root {
+  --primary: #3490dc;
+  --secondary: #6b7280;
+  --accent: #10b981;
+  --neutral: #374151;
+  --base-100: #ffffff;
+  --base-200: #f9fafb;
+  --base-300: #f3f4f6;
+  --base-content: #1f2937;
+  --info: #3b82f6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+}
+
+.dark {
+  --primary: #60a5fa;
+  --secondary: #9ca3af;
+  --accent: #34d399;
+  --neutral: #d1d5db;
+  --base-100: #1f2937;
+  --base-200: #111827;
+  --base-300: #0f172a;
+  --base-content: #f9fafb;
+  --info: #60a5fa;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+}
+
+/* Now update the theme colors to use the CSS variables */
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-neutral: var(--neutral);
+  --color-base-100: var(--base-100);
+  --color-base-200: var(--base-200);
+  --color-base-300: var(--base-300);
+  --color-base-content: var(--base-content);
+  --color-info: var(--info);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+}
+
+/* Base styles that auto-apply */
+body {
+  @apply bg-base-100 text-base-content;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply text-base-content;
+}
+
+p, span, div {
+  @apply text-base-content;
+}
+
+a {
+  @apply text-primary hover:opacity-80;
+}
+
+select {
+    @apply bg-base-100
+}
