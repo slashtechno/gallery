@@ -2,8 +2,10 @@
   import { SignIn, SignOut } from "@auth/sveltekit/components"
   import { page } from "$app/state";
   import UploadImage from "$lib/components/UploadImage.svelte";
+  import ImageGrid from "$lib/components/ImageGrid.svelte";
   $inspect(page);
-	let { form } = $props();
+	let { form, data } = $props();
+
 </script>
  
 <div class="flex flex-col items-center">
@@ -15,19 +17,22 @@
         alt="User Avatar"
       />
     {/if}
-    <span class="signedInText">
-      <small>Signed in as</small><br />
-      <strong>{page.data.session.user?.name ?? page.data.session.user?.email}</strong>
-    </span>
-    <SignOut>
-      {#snippet submitButton()}
-            <div  class="buttonPrimary">Sign out</div>
-          {/snippet}
-    </SignOut>
+    <div class="text-center">
+      <span class="text-sm">Signed in as</span>
+      <br />
+      <span class="font-bold">{page.data.session.user?.name ?? page.data.session.user?.email}</span>
+      <br />
+      <span class="font-light font-mono">{page.data.session.user?.id}</span>
+      <SignOut>
+        {#snippet submitButton()}
+        <div >Sign out</div>
+        {/snippet}
+      </SignOut>
+    </div>
     <UploadImage form=form/>
     
   {:else}
-    <span class="notSignedInText">You are not signed in</span>
+    <span>You are not signed in</span>
     <!-- Display link to built-in login page -->
     <!-- <SignIn/> -->
     <!-- Same as above, but add a custom button -->
@@ -39,4 +44,5 @@
     <!-- Only display email -->
     <!-- <SignIn provider="email"/> -->
   {/if}
+  <ImageGrid images={data.images}/>
 </div>

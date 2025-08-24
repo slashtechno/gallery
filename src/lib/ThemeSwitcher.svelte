@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   let theme = $state("light");
-  $inspect(theme);
+  // $inspect(theme);
 
   onMount(() => {
     theme =

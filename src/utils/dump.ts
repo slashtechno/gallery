@@ -1,5 +1,5 @@
-import { storage } from "$lib/db";
+import { dataStorage } from "$lib/utils";
 import { snapshot } from "unstorage";
 
-const data = await snapshot(storage, "");
+const data = await snapshot(dataStorage, "");
 console.log(data)

@@ -1,13 +1,12 @@
 import { SvelteKitAuth, type DefaultSession } from "@auth/sveltekit";
 import Loops from "@auth/sveltekit/providers/loops";
 import { UnstorageAdapter } from "@auth/unstorage-adapter";
-import { createStorage, prefixStorage } from "unstorage";
 import {
   AUTH_LOOPS_KEY,
   AUTH_LOOPS_TRANSACTIONAL_ID,
   AUTH_ALLOWED_EMAILS,
 } from "$env/static/private";
-import { storage } from "$lib/db";
+import { dataStorage } from "$lib/storage.server";
 // import GitHub from "@auth/sveltekit/providers/github"
 
 declare module "@auth/sveltekit" {
@@ -19,7 +18,7 @@ declare module "@auth/sveltekit" {
 }
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  adapter: UnstorageAdapter(storage),
+  adapter: UnstorageAdapter(dataStorage),
   providers: [
     Loops({
       apiKey: AUTH_LOOPS_KEY,
