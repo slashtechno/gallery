@@ -26,6 +26,7 @@
 	"dependencies": {
 		"@auth/sveltekit": "^1.10.0",
 		"@auth/unstorage-adapter": "^2.10.0",
+		"@types/node": "^24.3.0",
 		"unstorage": "^1.17.0"
 	}
 }

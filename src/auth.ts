@@ -26,14 +26,18 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   // https://authjs.dev/reference/sveltekit/types#callbacks
   callbacks: {
     // https://authjs.dev/reference/sveltekit/types#signin
-    async signIn({profile}) {
-      if (!profile?.email) return false;
-      return isAllowedEmail(profile.email);
+    async signIn({profile, user, account}) {
+      // console.log(profile)
+      // if (!profile?.email) return false;
+      if (!user?.email) return false;
+      // return isAllowedEmail(profile.email);
+      return isAllowedEmail(user.email);
     }
   } 
 })
 
 function getAllowedEmails(): string[] {
+  console.log(AUTH_ALLOWED_EMAILS)
   return AUTH_ALLOWED_EMAILS
     .split(",")
     .map(e => e.trim())
@@ -41,5 +45,6 @@ function getAllowedEmails(): string[] {
 }
 
 export function isAllowedEmail(email: string): boolean {
+  // console.log(getAllowedEmails());
   return getAllowedEmails().includes(email);
 }

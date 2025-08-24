@@ -2,7 +2,7 @@
   import "../app.css";
   import Gallery from "$lib/assets/Gallery.excalidraw.svg";
   import ThemeSwitcher from "$lib/ThemeSwitcher.svelte";
-  import Header from "$lib/Header.svelte";
+  import Header from "$lib/components/Header.svelte";
 
   let { children } = $props();
 </script>
