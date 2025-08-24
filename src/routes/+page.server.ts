@@ -1,9 +1,13 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { writeFile } from 'fs/promises';
 
 export const actions = {
-	upload: async ({ request }) => {
+	upload: async ({ request, locals }) => {
 		const data = await request.formData();
+        const session = await locals.auth()
+        if (!session?.user) {
+            redirect(303, `/auth/signin`)
+        }
 		try {
 			const images = data.getAll("images");
 			console.log(images);
