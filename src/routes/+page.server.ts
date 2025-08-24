@@ -1,3 +1,4 @@
+import { convertFileToBase64 } from '$lib/db.js';
 import { fail, redirect } from '@sveltejs/kit';
 import { writeFile } from 'fs/promises';
 
@@ -14,6 +15,8 @@ export const actions = {
 			for (const image of images) {
 				const file = image as File;
                 // https://stackoverflow.com/a/75316026
+				const imageBase64 = await convertFileToBase64(file);
+				console.log(imageBase64?.slice(-5))
 				await writeFile(`./files/${file.name}`, new Uint8Array(await file.arrayBuffer()));
 			}
 		} catch (error) {
