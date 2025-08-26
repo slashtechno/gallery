@@ -30,19 +30,6 @@
       </SignOut>
     </div>
     <UploadImage form={form}/>
-    
-  {:else}
-    <span>You are not signed in</span>
-    <!-- Display link to built-in login page -->
-    <!-- <SignIn/> -->
-    <!-- Same as above, but add a custom button -->
-    <SignIn>
-    {#snippet submitButton()}
-            <div  class="text-secondary bg-secondary rounded-2xl px-4 py-2 my-2">Sign in</div>
-          {/snippet}
-    </SignIn>
-    <!-- Only display email -->
-    <!-- <SignIn provider="email"/> -->
-  {/if}
-  <ImageGrid images={data.images} form={form}/>
+    {/if}
+  <ImageGrid images={data.images} userName={data.userName} form={form}/>
 </div>

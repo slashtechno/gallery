@@ -2,7 +2,7 @@ import {
   convertFileToBase64,
   imageTodataUrl,
 } from "$lib/utils.js";
-import { fileToCleanImage } from "$lib/storage.server.js";
+import { fileToCleanImage, getUserName } from "$lib/storage.server.js";
 import { forbiddenFail, primaryUserId } from "$lib/consts.js";
 import { loadImagesForUser, imageCollection } from "$lib/storage.server.js";
 import type { Image } from "$lib/utils.js";
@@ -70,7 +70,11 @@ export const actions = {
 };
 
 export async function load({}) {
+
+  const userName = await getUserName(primaryUserId)
+
   return {
     images: await loadImagesForUser(primaryUserId),
+    userName: userName
   };
 }

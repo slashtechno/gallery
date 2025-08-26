@@ -5,6 +5,8 @@ import { prefixStorage } from "unstorage";
 import type { Image } from "$lib/utils";
 import convert from "heic-convert";
 import sharp from "sharp";
+import { downscaleFactor } from "./consts";
+import type { User } from "@auth/sveltekit";
 
 
 export const dataStorage = createStorage({
@@ -48,13 +50,19 @@ export async function fileToCleanImage(file: File, userId: string): Promise<Imag
   }
 
   // Strip metadata (don't call .withMetadata())
-  const outputBuffer = await sharp(inputBuffer).toBuffer();
+  // Re-load and downscale
+  const outputBuffer = await sharp(inputBuffer).resize(
+    {width: beforeMeta.width*downscaleFactor}
+  ).toBuffer();
 
   // Inspect metadata AFTER stripping
   const afterMeta = await sharp(outputBuffer).metadata();
   console.log("After metadata:", afterMeta);
-  const imageBase64 = outputBuffer.toString("base64");
 
+  // Convert to base65
+  const imageBase64 = outputBuffer.toString("base64")
+
+  
   const newImageId = crypto.randomUUID();
   return {
     id: newImageId,
@@ -62,4 +70,12 @@ export async function fileToCleanImage(file: File, userId: string): Promise<Imag
     userId: userId,
     mimeType: file.type,
   };
+}
+
+
+export async function getUserName(id: string): Promise<string> {
+    const targetUser = await dataStorage.getItem(`user:${id}`) as User;
+    if (!targetUser.name) return "N/A";
+    return targetUser.name;
+
 }
