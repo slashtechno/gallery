@@ -3,6 +3,10 @@ import fsDriver from "unstorage/drivers/fs";
 import { createStorage } from "unstorage";
 import { prefixStorage } from "unstorage";
 import type { Image } from "$lib/utils";
+import convert from "heic-convert";
+import sharp from "sharp";
+
+
 export const dataStorage = createStorage({
   driver: fsDriver({ base: "./db" }),
 });
@@ -20,4 +24,42 @@ export async function loadImagesForUser(userId: string): Promise<Image[]> {
       }
     }
     return userImages;
+}
+
+
+export async function fileToCleanImage(file: File, userId: string): Promise<Image> {
+  // This is not const since if it's heif, it may need to be converted to a jpeg
+  let arrayBuffer = await file.arrayBuffer();
+  let inputBuffer = Buffer.from(arrayBuffer);
+
+  // EXIF
+  // Inspect metadata, strip it, and return base64
+  const beforeMeta = await sharp(inputBuffer).metadata();
+  // console.log("Before metadata:", beforeMeta);
+
+  // Check if the the file is heif
+  if (beforeMeta.format == "heif") {
+    arrayBuffer = await convert({
+      buffer: inputBuffer,
+      format: "JPEG",
+      quality: 1,
+    });
+    inputBuffer = Buffer.from(arrayBuffer);
+  }
+
+  // Strip metadata (don't call .withMetadata())
+  const outputBuffer = await sharp(inputBuffer).toBuffer();
+
+  // Inspect metadata AFTER stripping
+  const afterMeta = await sharp(outputBuffer).metadata();
+  console.log("After metadata:", afterMeta);
+  const imageBase64 = outputBuffer.toString("base64");
+
+  const newImageId = crypto.randomUUID();
+  return {
+    id: newImageId,
+    content: imageBase64,
+    userId: userId,
+    mimeType: file.type,
+  };
 }

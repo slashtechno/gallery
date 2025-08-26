@@ -29,7 +29,7 @@
         {/snippet}
       </SignOut>
     </div>
-    <UploadImage form=form/>
+    <UploadImage form={form}/>
     
   {:else}
     <span>You are not signed in</span>
@@ -44,5 +44,5 @@
     <!-- Only display email -->
     <!-- <SignIn provider="email"/> -->
   {/if}
-  <ImageGrid images={data.images}/>
+  <ImageGrid images={data.images} form={form}/>
 </div>

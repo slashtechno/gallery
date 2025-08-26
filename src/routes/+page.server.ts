@@ -1,18 +1,16 @@
 import {
   convertFileToBase64,
   imageTodataUrl,
-  primaryUserId,
 } from "$lib/utils.js";
+import { fileToCleanImage } from "$lib/storage.server.js";
+import { forbiddenFail, primaryUserId } from "$lib/consts.js";
 import { loadImagesForUser, imageCollection } from "$lib/storage.server.js";
 import type { Image } from "$lib/utils.js";
 import { fail, redirect } from "@sveltejs/kit";
 import { writeFile } from "fs/promises";
-import convert from 'heic-convert';
-import sharp from "sharp";
 // console.log("Formats:", sharp.format); // print available formats
 
-
-export const actions = {  
+export const actions = {
   upload: async ({ request, locals }) => {
     const data = await request.formData();
     const session = await locals.auth();
@@ -24,43 +22,13 @@ export const actions = {
       // console.log(images);
       for (const image of images) {
         const file = image as File;
-        // This is not const since if it's heif, it may need to be converted to a jpeg
-        let arrayBuffer = await file.arrayBuffer()
-        let inputBuffer = Buffer.from(arrayBuffer);
 
-        // EXIF
-        // Inspect metadata, strip it, and return base64
-        const beforeMeta = await sharp(inputBuffer).metadata();
-        // console.log("Before metadata:", beforeMeta);
+        const imageObject = await fileToCleanImage(file, session.user.id!);
 
-        // Check if the the file is heif
-        if (beforeMeta.format == "heif"){
-            arrayBuffer = await convert({ buffer: inputBuffer,     format: 'JPEG', quality: 1 });
-            inputBuffer = Buffer.from(arrayBuffer);
-        }
+        // If there's no image data, continue
+        if (!imageObject.content) continue;
 
-        // Strip metadata (don't call .withMetadata())
-        const outputBuffer = await sharp(inputBuffer).toBuffer();
-
-        // Inspect metadata AFTER stripping
-        const afterMeta = await sharp(outputBuffer).metadata();
-        console.log("After metadata:", afterMeta);
-        const imageBase64 = outputBuffer.toString("base64");
-
-
-        if (!imageBase64) continue;
-
-        const newImageId = crypto.randomUUID();
-        const imageObject: Image = {
-          id: newImageId,
-          content: imageBase64,
-          userId: session.user.id!,
-          mimeType: file.type,
-        };
-
-
-
-        await imageCollection.setItem(newImageId, imageObject);
+        await imageCollection.setItem(imageObject.id, imageObject);
         // await writeFile(
         //   `./files/${file.name}`,
         //   new Uint8Array(await file.arrayBuffer())
@@ -72,6 +40,32 @@ export const actions = {
         error: error instanceof Error ? error.message : String(error),
       });
     }
+
+      return { success: true };
+
+  },
+  delete: async ({ request, locals }) => {
+    const data = await request.formData();
+    const session = await locals.auth();
+    if (!session?.user) {
+      redirect(303, `/auth/signin`);
+    }
+
+    const imageId = data.get("id")
+    if (!imageId || typeof imageId != "string") return fail(
+        400,
+        {imageId, invalid: true}
+    );
+
+    const image = await imageCollection.getItem(imageId)
+    if (image?.userId != session.user.id) {
+        return forbiddenFail
+    }
+
+    await imageCollection.removeItem(image?.id!, { removeMeta: true });
+
+    
+		return { success: true };
   },
 };
 
