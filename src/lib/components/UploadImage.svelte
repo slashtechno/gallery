@@ -22,6 +22,6 @@
 		}}
         enctype="multipart/form-data"
 	>
-        <input bind:files={images} accept="image/png, image/jpeg" name="images" multiple type="file" />
+        <input bind:files={images} accept="image/png, image/jpeg image/heic" name="images" multiple type="file" />
         <button disabled={uploading} type="submit">Upload</button>
 </form>
