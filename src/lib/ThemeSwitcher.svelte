@@ -7,9 +7,10 @@
   onMount(() => {
     theme =
       localStorage.theme ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
+      window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     document.documentElement.classList.toggle("dark", theme == "dark");
 
+  console.log(window.matchMedia("(prefers-color-scheme: dark)").matches);
     // https://tailwindcss.com/docs/dark-mode#with-system-theme-support
     // On page load or when changing themes, best to add inline in `head` to avoid FOUC
     // document.documentElement.classList.toggle(
@@ -33,7 +34,7 @@
     <select
       bind:value={theme}
       onchange={() => {
-        if (theme == "auto") {
+        if (theme == "system") {
           localStorage.removeItem("theme");
           theme = (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") 
         } else {
@@ -44,5 +45,5 @@
     >
       <option value="dark" class="text-text-light bg-background-light">Dark</option>
       <option value="light" class="text-text-light bg-background-light">Light</option>
-      <option value="auto" class="text-text-light bg-background-light">Auto</option>
+      <option value="system" class="text-text-light bg-background-light">Use system (wipe preference)</option>
     </select>
