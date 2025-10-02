@@ -1,0 +1,13 @@
+# Simple docker-compose for hobby / single-instance production
+version: "3.8"
+services:
+  web:
+    build: .
+    image: gallery:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    volumes:
+      - ./db:/app/db

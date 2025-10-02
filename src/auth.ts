@@ -26,6 +26,9 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
     }) as any,
     // GitHub
   ],
+  // allow running on hobby / container hosts where the reported Host header
+  // may not match an expected trusted host
+  trustHost: true,
   // https://authjs.dev/reference/sveltekit/types#callbacks
   callbacks: {
     // https://authjs.dev/reference/sveltekit/types#signin
