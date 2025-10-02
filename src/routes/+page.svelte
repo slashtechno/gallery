@@ -22,7 +22,7 @@
       <br />
       <span class="font-bold">{page.data.session.user?.name ?? page.data.session.user?.email}</span>
       <br />
-      <span class="font-light font-mono">{page.data.session.user?.id}</span>
+      <span class="font-light font-mono"><a class="underline text-sm" href={`/users/${page.data.session.user?.id}`}>{page.data.session.user?.id}</a></span>
       <SignOut>
         {#snippet submitButton()}
         <div >Sign out</div>
