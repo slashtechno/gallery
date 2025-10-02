@@ -1,38 +1,53 @@
-# sv
+# Gallery
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A SvelteKit web application for uploading and viewing images. Uses email-based authentication and supports JPEG, PNG, and HEIC formats.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Authentication**: Email-based authentication with allowed email list
+- **Gallery Views**: 
+  - Root page shows authenticated user's images or first allowed email's images for unauthenticated users
+  - `/users/[id]` route shows images for any specific user ID
+- **Image Upload**: Support for JPEG, PNG, and HEIC formats
+- **Metadata Removal**: Strips metadata from uploaded images
+- **Image Management**: Delete images from your own gallery
 
-```sh
-# create a new project in the current directory
-npx sv create
+## Setup
 
-# create a new project in my-app
-npx sv create my-app
+1. Install dependencies:
+   ```bash
+   bun install
+   ```
+
+2. Create a `.env` file:
+   ```env
+   AUTH_SECRET=your-secret-key-here
+   AUTH_LOOPS_KEY=your-loops-api-key
+   AUTH_LOOPS_TRANSACTIONAL_ID=your-loops-transactional-id
+   AUTH_ALLOWED_EMAILS=email1@example.com,email2@example.com
+   ```
+
+   AUTH_ALLOWED_EMAILS accepts a comma-separated list of allowed email addresses (for example: `alice@example.com,bob@example.com`).
+
+3. Run the development server:
+   ```bash
+   bun run dev
+   ```
+
+The application will be available at `http://localhost:5173`.
+
+## Usage
+
+- **Root page (`/`)**: 
+  - If logged in: Shows your own images
+  - If not logged in: Shows images for the user associated with the first email in `AUTH_ALLOWED_EMAILS`, or an empty gallery with sign-in prompt if no user is found
+- **User galleries (`/users/[user-id]`)**: View any user's gallery by their user ID
+- **Authentication**: Only users with email addresses listed in `AUTH_ALLOWED_EMAILS` can sign in and upload images
+- **Upload**: Sign in with an authorized email to upload images to your gallery
+- **Delete**: Remove images from your own gallery
+
+## Build
+
+```bash
+bun run build
 ```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

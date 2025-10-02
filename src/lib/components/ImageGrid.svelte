@@ -1,30 +1,29 @@
 <script lang="ts">
   import { imageTodataUrl, type Image } from "$lib/utils";
   import type { ActionData } from "../../routes/$types";
-  let { images, form, userName }: { images: Image[]; form: ActionData, userName: string} = $props();
+  // Make form and userName optional to allow using ImageGrid in read-only contexts
+  let { images = [], form = null, userName = '' }: { images?: Image[]; form?: ActionData | null; userName?: string } = $props();
   import { page } from "$app/state";
   import DeleteImage from "./DeleteImage.svelte";
 </script>
 
-<div class="flex justify-center">
+<div class="flex flex-col items-center">
+  <h2 class="text-xl mb-4">{userName}'s gallery</h2>
 
-    <h2 class="text-xl">{userName}'s gallery</h2>
-
-  <!-- justify-items-center = justify items horizontally in their cells -->
-  <!-- inline-grid =  grid that takes up only as much width as is needed for the items-->
-  <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"> -->
-  <div class="flex flex-wrap justify-center gap-5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 justify-items-center">
     {#each images as image}
-    <!-- using flex-col makes it so the delete button is below the image -->
-      <div class="flex flex-col items-center">
-        <!-- https://tailwindcss.com/docs/object-fit -->
-        <img
-        src={imageTodataUrl(image)}
-          alt="{image.userId}'s image"
-          class="h-100 w-80 object-contain"
-        />
+      <div class="w-48 h-64 flex flex-col items-center">
+        <div class="w-full h-full flex items-center justify-center border rounded overflow-hidden bg-transparent">
+          <img
+            src={imageTodataUrl(image)}
+            alt="{image.userId}'s image"
+            class="max-h-full max-w-full object-contain"
+          />
+        </div>
         {#if page.data.session?.user?.id == image.userId}
-          <DeleteImage {image} {form} />
+          <div class="mt-2 w-full flex justify-center">
+            <DeleteImage {image} {form} />
+          </div>
         {/if}
       </div>
     {/each}

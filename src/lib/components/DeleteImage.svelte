@@ -8,7 +8,8 @@
     let deleting = $state(false);
 </script>
 
-<FormError form={form} />
+<!-- Show delete-specific errors only -->
+<FormError form={form} field="deleteError" />
 
 <!-- https://svelte.dev/tutorial/kit/named-form-actions (the delete action is a good example) -->
 <form

@@ -30,6 +30,19 @@
       </SignOut>
     </div>
     <UploadImage form={form}/>
-    {/if}
+  {/if}
   <ImageGrid images={data.images} userName={data.userName} form={form}/>
+  
+  {#if data.showSignInPrompt}
+    <div class="mt-8 text-center">
+      <p class="text-gray-600 mb-4">You must be an allowed user to upload and manage images. Sign in with an authorized email address.</p>
+      <SignIn>
+        {#snippet submitButton()}
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Sign In
+          </button>
+        {/snippet}
+      </SignIn>
+    </div>
+  {/if}
 </div>

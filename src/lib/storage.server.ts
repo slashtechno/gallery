@@ -29,9 +29,13 @@ export async function loadImagesForUser(userId: string): Promise<Image[]> {
 }
 
 
-export async function fileToCleanImage(file: File, userId: string): Promise<Image> {
+export async function fileToCleanImage(file: File, userId: string): Promise<Image | null> {
   // This is not const since if it's heif, it may need to be converted to a jpeg
   let arrayBuffer = await file.arrayBuffer();
+  if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+    // empty file — caller should skip
+    return null;
+  }
   let inputBuffer = Buffer.from(arrayBuffer);
 
   // EXIF
@@ -78,4 +82,14 @@ export async function getUserName(id: string): Promise<string> {
     if (!targetUser.name) return "N/A";
     return targetUser.name;
 
+}
+
+
+export async function getUserIdByEmail(email: string): Promise<string | null> {
+  try {
+    const userId = await dataStorage.getItem(`user/email/${email}`) as string;
+    return userId || null;
+  } catch {
+    return null;
+  }
 }

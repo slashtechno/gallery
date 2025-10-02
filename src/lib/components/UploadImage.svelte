@@ -7,9 +7,11 @@
   let { form }: {form: ActionData} = $props();
 </script>
 
-<FormError form={form} />
+<!-- Show upload-specific errors only -->
+<FormError form={form} field="uploadError" />
 
 <form
+  class="w-full max-w-md flex items-center gap-3"
   method="POST"
   action="/?/upload"
   use:enhance={() => {
@@ -22,11 +24,12 @@
   enctype="multipart/form-data"
 >
   <input
+    class="flex-1"
     bind:files={images}
-    accept="image/png, image/jpeg image/heic"
+    accept="image/png, image/jpeg, image/heic"
     name="images"
     multiple
     type="file"
   />
-  <button disabled={uploading} type="submit">Upload</button>
+  <button class="px-3 py-1 rounded bg-gray-800 text-white" disabled={uploading} type="submit">Upload</button>
 </form>

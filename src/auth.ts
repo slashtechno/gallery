@@ -30,10 +30,8 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
   callbacks: {
     // https://authjs.dev/reference/sveltekit/types#signin
     async signIn({ profile, user, account }) {
-      // console.log(profile)
-      // if (!profile?.email) return false;
+      // Only allow users with emails in AUTH_ALLOWED_EMAILS to sign in
       if (!user?.email) return false;
-      // return isAllowedEmail(profile.email);
       return isAllowedEmail(user.email);
     },
     session: async ({ session, token }) => {
@@ -58,3 +56,5 @@ export function isAllowedEmail(email: string): boolean {
   // console.log(getAllowedEmails());
   return getAllowedEmails().includes(email);
 }
+
+export { getAllowedEmails };
