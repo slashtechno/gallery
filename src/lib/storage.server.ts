@@ -7,10 +7,16 @@ import convert from "heic-convert";
 import sharp from "sharp";
 import { downscaleFactor } from "./consts";
 import type { User } from "@auth/sveltekit";
+import redisDriver from "unstorage/drivers/redis";
+import { REDIS_URL } from "$env/static/private";
+
 
 
 export const dataStorage = createStorage({
-  driver: fsDriver({ base: "./db" }),
+  driver: redisDriver({
+    url: REDIS_URL,
+    base: "gallery"
+  })
 });
 
 
